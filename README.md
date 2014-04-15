@@ -1,6 +1,8 @@
 twiggy-goodies
 ==============
 
+[![ChangeLog](http://allmychanges.com/u/svetlyak40wt/python/twiggy-goodies/badge/)](http://allmychanges.com/u/svetlyak40wt/python/twiggy-goodies/)
+
 Here you'll find some useful addons to [Twiggy], pythonic logger.
 These addons help to use Twiggy with third-party libraries, which
 use standart library's [logging][].
