@@ -60,9 +60,16 @@ That is it.
 Some other goodies
 ------------------
 
- * `twiggy_goodies.syslog` contains `SysLogOutput`.
+  * `twiggy_goodies.syslog` contains `SysLogOutput`.
   * `twiggy_goodies.json` contains `JsonOutput`, useful
     to pass data to logstash.
+  * `twiggy_goodies.django_rq` contains `job` decorator, which
+    groups all messages logged from one task, using UUID.
+  * `twiggy_goodies.django` contains `LogMixin` class which
+    could be mixed to any management command, to group all
+    logged messages by single UUID.
+  * `twiggy_goodies.django` also contains `LogMiddleware`, to
+    do the same as `LogMixin`, but for each http request.
 
 [Twiggy]: https://github.com/wearpants/twiggy
 [logging]: https://docs.python.org/2/library/logging.html

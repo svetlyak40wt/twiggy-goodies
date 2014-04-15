@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='twiggy-goodies',
-    version='0.1.0',
+    version='0.2.0',
     description='Handlers and helpers for Twiggy logging library.',
     author='Alexander Artemenko',
     author_email='svetlyak.40wt@gmail.com',
