@@ -1,9 +1,15 @@
+0.2.1 (2014-04-16)
+==================
+
+  * Fixed error when JsonOutput should write log into the current directory
+    but tries to create it first.
+
 0.2.0 (2014-04-16)
 ==================
 
 This version makes futher steps to stiched log messages in
 Django projects. It introduces several improvements:
-	
+
   * A middleware `twiggy_goodies.django.LogMiddleware`, which groups all messages,
     logged within same http request-response cycle.
   * A mixin for management commands `twiggy_goodies.django.LogMixin`, which does
