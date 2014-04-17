@@ -1,3 +1,9 @@
+0.2.2 (2014-04-17)
+==================
+
+  * Fixed error in django logging middleware, caused by absent
+    Content-Type header in DELETE responses from django-rest-framework.
+
 0.2.1 (2014-04-16)
 ==================
 

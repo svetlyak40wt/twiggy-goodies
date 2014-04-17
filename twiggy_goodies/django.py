@@ -42,11 +42,15 @@ class LogMiddleware(object):
 
     def process_response(self, request, response):
         code = response.status_code
-        
-        with log.fields(status_code=code,
-                        content_type=response['content-type']):
+
+        fields = dict(status_code=code)
+        if 'content-type' in response:
+            fields['content_type'] = response['content-type']
+            
+        with log.fields(**fields):
             method = log.error if code >= 500 else log.info
             method('Request processed')
+
         request._logger_ctx.__exit__(None, None, None)
 
         response['X-Request-Id'] = request.uuid
