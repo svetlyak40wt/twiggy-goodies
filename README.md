@@ -11,7 +11,7 @@ Main target was to create convenient way to write log items
 which are grouped by some request identifier. Twiggy already
 supports it by it's `fields` method, but sometimes it is too
 inconvenient to pass logger object around. That is why I take
-idea of a threadlocall loggers stack from the [logbook][] and
+idea of a threadlocal loggers stack from the [logbook][] and
 implemented it for twiggy.
 
 Here is example how to use it:
