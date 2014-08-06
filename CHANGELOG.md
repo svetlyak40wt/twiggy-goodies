@@ -1,3 +1,11 @@
+0.3.0 (2014-08-06)
+==================
+
+* Now json serializer returns timestamp with explicit UTC timestamp.
+  This probably could broke someone's log processing pipeline, so
+  consider this release as backward incompatible.
+* Also, now it depends on pytz package.
+
 0.2.2 (2014-04-17)
 ==================
 
