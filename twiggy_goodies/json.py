@@ -2,10 +2,12 @@
 from __future__ import absolute_import
 
 import os
+import calendar
 import anyjson
 import datetime
 import time
 import socket
+import pytz
 
 from twiggy import outputs, levels
 
@@ -32,7 +34,8 @@ class JsonOutput(outputs.Output):
             fields = msg.fields.copy()
             fields['level'] = severity_names[fields['level']]
             timestamp = fields.pop('time')
-            timestamp = datetime.datetime.fromtimestamp(time.mktime(timestamp))
+            timestamp = datetime.datetime.fromtimestamp(calendar.timegm(timestamp))
+            timestamp = timestamp.replace(tzinfo=pytz.utc)
 
             if msg.traceback:
                 fields['exception'] = msg.traceback.decode('utf-8')
