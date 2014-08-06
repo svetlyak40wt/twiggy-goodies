@@ -1,3 +1,8 @@
+0.3.1 (2014-08-06)
+==================
+
+* Fixed issue when json output returned local date instead of UTC.
+
 0.3.0 (2014-08-06)
 ==================
 
