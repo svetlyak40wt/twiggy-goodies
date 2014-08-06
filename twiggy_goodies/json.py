@@ -34,7 +34,7 @@ class JsonOutput(outputs.Output):
             fields = msg.fields.copy()
             fields['level'] = severity_names[fields['level']]
             timestamp = fields.pop('time')
-            timestamp = datetime.datetime.fromtimestamp(calendar.timegm(timestamp))
+            timestamp = datetime.datetime.utcfromtimestamp(calendar.timegm(timestamp))
             timestamp = timestamp.replace(tzinfo=pytz.utc)
 
             if msg.traceback:
