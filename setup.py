@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'twiggy<0.5.0',
         'pytz',
+        'anyjson',
     ],
     license='BSD',
     zip_safe=True,
