@@ -63,6 +63,8 @@ Some other goodies
   * `twiggy_goodies.syslog` contains `SysLogOutput`.
   * `twiggy_goodies.json` contains `JsonOutput`, useful
     to pass data to logstash.
+  * `twiggy_goodies.logstash` contains `LogstashOutput`,
+    which sends messages directly to Logstash's UDP port.
   * `twiggy_goodies.django_rq` contains `job` decorator, which
     groups all messages logged from one task, using UUID.
   * `twiggy_goodies.django` contains `LogMixin` class which

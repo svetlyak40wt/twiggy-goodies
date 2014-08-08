@@ -1,3 +1,11 @@
+0.4.0 (2014-08-08)
+==================
+
+* Added new output `twiggy_goodies.logstash.LogstashOutput` which
+  sends json encoded data via UDP to a logstash server.
+* Fixed errors related to missing `severity_names` in `JsonOutput`,
+   when `source_host` argument was specified.
+
 0.3.1 (2014-08-06)
 ==================
 
