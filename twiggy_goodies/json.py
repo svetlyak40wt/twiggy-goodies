@@ -21,13 +21,13 @@ class JsonOutput(outputs.Output):
         if source_host is None:
             source_host = socket.gethostname()
 
-            severity_names = {
-                levels.CRITICAL: 'CRITICAL',
-                levels.DEBUG:    'DEBUG',
-                levels.ERROR:    'ERROR',
-                levels.INFO:     'INFO',
-                levels.WARNING:  'WARNING',
-            }
+        severity_names = {
+            levels.CRITICAL: 'CRITICAL',
+            levels.DEBUG:    'DEBUG',
+            levels.ERROR:    'ERROR',
+            levels.INFO:     'INFO',
+            levels.WARNING:  'WARNING',
+        }
 
         
         def format(msg):
