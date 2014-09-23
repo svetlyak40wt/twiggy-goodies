@@ -1,3 +1,8 @@
+0.5.0 (2014-09-23)
+==================
+
+* Fixed issue when twiggy's plain text broke on unicode field values.
+
 0.4.1 (2014-08-20)
 ==================
 
