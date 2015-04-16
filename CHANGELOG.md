@@ -1,3 +1,8 @@
+0.6.0 (2015-04-15)
+==================
+
+* Fixed errors with missing fieldsDict and addEmitters in `twiggy` >= 0.4.6 on python3.
+
 0.5.0 (2014-09-23)
 ==================
 
