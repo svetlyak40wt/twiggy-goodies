@@ -19,7 +19,7 @@ class ThreadAwareLogger(object):
     without passing logger object from one
     method or function to another.
     """
-    
+
     thread_data = threading.local()
 
     def __init__(self, logger):
@@ -31,7 +31,7 @@ class ThreadAwareLogger(object):
             # if there isn't any stack then create it and add a root logger to it
             stack.append(_twiggy_log)
             self.thread_data.loggers_stack = stack
-            
+
         return stack[-1]
 
     def __getattr__(self, name):
@@ -41,14 +41,14 @@ class ThreadAwareLogger(object):
 
     @contextlib.contextmanager
     def fields(self, **kwargs):
-        new_logger = self.get_top_logger().fieldsDict(kwargs)
+        new_logger = self.get_top_logger().fields_dict(kwargs)
         self.thread_data.loggers_stack.append(new_logger)
         yield
         self.thread_data.loggers_stack.pop()
 
     @contextlib.contextmanager
     def name_and_fields(self, name, **kwargs):
-        new_logger = self.get_top_logger().name(name).fieldsDict(kwargs)
+        new_logger = self.get_top_logger().name(name).fields_dict(kwargs)
         self.thread_data.loggers_stack.append(new_logger)
         yield
         self.thread_data.loggers_stack.pop()

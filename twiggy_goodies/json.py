@@ -5,7 +5,7 @@ import os
 import calendar
 import anyjson
 import datetime
-import time
+import six
 import socket
 import pytz
 
@@ -29,7 +29,7 @@ class JsonOutput(outputs.Output):
             levels.WARNING:  'WARNING',
         }
 
-        
+
         def format(msg):
             fields = msg.fields.copy()
             fields['level'] = severity_names[fields['level']]
@@ -41,28 +41,29 @@ class JsonOutput(outputs.Output):
                 fields['exception'] = msg.traceback.decode('utf-8')
 
             for key, value in fields.items():
-                if not isinstance(value, (int, float, basestring)):
-                    fields[key] = unicode(value)
-                                      
+                if not isinstance(value, (int, float)) \
+                   and not isinstance(value, six.string_types):
+                    fields[key] = six.text_type(value)
+
 
             entry = {'@message': msg.text,
                      '@timestamp': timestamp.isoformat(),
                      '@source_host': source_host,
                      '@fields': fields}
             return anyjson.serialize(entry)
-        
+
         super(JsonOutput, self).__init__(format=format, close_atexit=True)
-            
-            
+
+
     def _open(self):
         dirname = os.path.dirname(self.filename)
         if dirname and not os.path.exists(dirname):
             os.makedirs(dirname)
-            
+
         self.fd = os.open(self.filename, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
 
     def _close (self):
         os.close(self.fd)
 
     def _write(self, msg):
-        os.write(self.fd, msg + '\n')
+        os.write(self.fd, (msg + '\n').encode('utf-8'))

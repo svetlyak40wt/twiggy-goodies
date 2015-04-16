@@ -14,6 +14,7 @@ setup(
         'twiggy<0.5.0',
         'pytz',
         'anyjson',
+        'six',
     ],
     license='BSD',
     zip_safe=True,

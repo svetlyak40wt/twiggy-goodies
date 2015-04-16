@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import logging
 
-from twiggy import addEmitters, outputs, levels, formats
+from twiggy import add_emitters, outputs, levels, formats
 from .json import JsonOutput
 from .std_logging import RedirectLoggingHandler
 
@@ -37,9 +37,10 @@ def setup_logging(filename,
         else:
             output = outputs.FileOutput(filename, format=format_string)
 
-    addEmitters(('emitter', level, None, output))
+    add_emitters(('emitter', level, None, output))
 
     if redirect:
         # redirect standart logging to twiggy
         del logging.root.handlers[:]
+        logging.root.level = 0 # to pass all messages to redirect handler
         logging.root.addHandler(RedirectLoggingHandler())

@@ -45,10 +45,10 @@ class RedirectLoggingHandler(logging.Handler):
 
     def emit(self, record):
         logger = log.get_top_logger()
-        
+
         logger = logger.name(record.name) \
-           .fieldsDict(self.find_extra(record)) \
-           
+           .fields_dict(self.find_extra(record)) \
+
         if record.exc_info:
             logger = logger.trace(record.exc_info)
 
@@ -57,4 +57,3 @@ class RedirectLoggingHandler(logging.Handler):
         # insert an unexisted keyword arguments there :(
         message = re.sub(r'({|})', r'\1\1', message)
         logger._emit(self.convert_level(record), message, (), {})
-                  
