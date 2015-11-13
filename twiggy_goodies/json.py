@@ -10,6 +10,7 @@ import socket
 import pytz
 
 from twiggy import outputs, levels
+from twiggy_goodies.utils import force_str
 
 
 class JsonOutput(outputs.Output):
@@ -38,7 +39,7 @@ class JsonOutput(outputs.Output):
             timestamp = timestamp.replace(tzinfo=pytz.utc)
 
             if msg.traceback:
-                fields['exception'] = msg.traceback.decode('utf-8')
+                fields['exception'] = force_str(msg.traceback)
 
             for key, value in fields.items():
                 if not isinstance(value, (int, float)) \

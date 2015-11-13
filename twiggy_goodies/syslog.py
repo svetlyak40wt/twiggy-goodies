@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import syslog
 from twiggy import outputs, levels, formats
+from twiggy_goodies.utils import force_str
 
 
 class SysLogOutput(outputs.Output):
@@ -27,7 +28,7 @@ class SysLogOutput(outputs.Output):
     def __init__(self, ident=('some-project', 'with-suffix')):
         self.ident = u'/'.join(filter(None, ident))
 
-        
+
         def format(msg):
             priority = self.priority_names.get(msg.level,
                                                self.LOG_WARNING)
@@ -35,15 +36,15 @@ class SysLogOutput(outputs.Output):
             fields = formats.line_conversion.convert(msg.fields)
             text = fields + u':' + msg.text
             if msg.traceback:
-                text += u'\n' + msg.traceback.decode('utf-8')
+                text += u'\n' + force_str(msg.traceback)
 
             text = text.encode('utf-8')
             text = text.encode('string_escape')
             return priority, text
-        
+
         super(SysLogOutput, self).__init__(format=format, close_atexit=True)
-            
-            
+
+
     def _open(self):
         syslog.openlog(self.ident.encode('utf-8'))
 

@@ -1,3 +1,9 @@
+0.7.0 (2015-11-12)
+==================
+
+* Fixed json and syslog loggers for Python 3.5.
+  They were unable to log tracebacks.
+
 0.6.0 (2015-04-15)
 ==================
 
