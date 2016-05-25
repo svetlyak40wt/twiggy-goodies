@@ -1,3 +1,12 @@
+0.8.0 (2016-05-25)
+==================
+
+* Now `filename` is optional for `JsonOutput`. And new parameter `stream` can be given.
+For example, `stream=sys.stdout`.
+* Also, `setup_logging` now uses `JsonOutput` with `stream=sys.stdout`, if
+`filename` is `None` and `format='json'` (this is default). This makes
+possible to output in JSON to stdout.
+
 0.7.0 (2015-11-12)
 ==================
 

@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import
 
+import sys
 import logging
 
 from twiggy import add_emitters, outputs, levels, formats
@@ -30,7 +31,16 @@ def setup_logging(filename,
                   format_string=_default_line_formatter):
 
     if filename is None:
-        output = outputs.StreamOutput(format=format_string)
+        if format == 'json':
+            args = {}
+            if filename:
+                args['filename'] = filename
+            else:
+                args['stream'] = sys.stdout
+
+            output = JsonOutput(**args)
+        else:
+            output = outputs.StreamOutput(format=format_string)
     else:
         if format == 'json':
             output = JsonOutput(filename)

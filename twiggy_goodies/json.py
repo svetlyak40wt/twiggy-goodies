@@ -17,8 +17,10 @@ class JsonOutput(outputs.Output):
     """Output from twiggy to JSON, useful for processing logs with logstash.
     """
 
-    def __init__(self, filename, source_host=None):
+    def __init__(self, filename=None, stream=None, source_host=None):
+        self.fd = stream.fileno()
         self.filename = filename
+
         if source_host is None:
             source_host = socket.gethostname()
 
@@ -57,14 +59,18 @@ class JsonOutput(outputs.Output):
 
 
     def _open(self):
-        dirname = os.path.dirname(self.filename)
-        if dirname and not os.path.exists(dirname):
-            os.makedirs(dirname)
+        if self.filename:
+            assert self.fd is None, 'You should not use arguments "stream" and "filename" together'
 
-        self.fd = os.open(self.filename, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
+            dirname = os.path.dirname(self.filename)
+            if dirname and not os.path.exists(dirname):
+                os.makedirs(dirname)
+
+            self.fd = os.open(self.filename, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
 
     def _close (self):
-        os.close(self.fd)
+        if self.filename:
+            os.close(self.fd)
 
     def _write(self, msg):
         os.write(self.fd, (msg + '\n').encode('utf-8'))
