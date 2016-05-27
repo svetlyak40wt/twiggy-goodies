@@ -9,8 +9,8 @@ import six
 import socket
 import pytz
 
-from twiggy import outputs, levels
-from twiggy_goodies.utils import force_str
+from twiggy import outputs
+from twiggy_goodies.utils import force_str, get_log_level_str
 
 
 class JsonOutput(outputs.Output):
@@ -21,42 +21,39 @@ class JsonOutput(outputs.Output):
         self.fd = stream.fileno()
         self.filename = filename
 
+        def serialize_msg(msg):
+            return anyjson.serialize(self.format(msg, source_host=source_host))
+
+        super(JsonOutput, self).__init__(format=serialize_msg, close_atexit=True)
+
+    def format(self, msg, source_host=None):
         if source_host is None:
             source_host = socket.gethostname()
 
-        severity_names = {
-            levels.CRITICAL: 'CRITICAL',
-            levels.DEBUG:    'DEBUG',
-            levels.ERROR:    'ERROR',
-            levels.INFO:     'INFO',
-            levels.WARNING:  'WARNING',
+        fields = msg.fields.copy()
+        fields['level'] = get_log_level_str(fields['level'])
+        timestamp = fields.pop('time')
+        timestamp = datetime.datetime.utcfromtimestamp(calendar.timegm(timestamp))
+        timestamp = timestamp.replace(tzinfo=pytz.utc)
+
+        if msg.traceback:
+            fields['exception'] = force_str(msg.traceback)
+
+        for key, value in fields.items():
+            if not isinstance(value, (int, float)) \
+               and not isinstance(value, six.string_types):
+                fields[key] = six.text_type(value)
+
+        return self.get_log_entry(msg, timestamp, source_host, fields)
+
+    @staticmethod
+    def get_log_entry(msg, timestamp, source_host, fields):
+        return {
+            '@message': msg.text,
+            '@timestamp': timestamp.isoformat(),
+            '@source_host': source_host,
+            '@fields': fields,
         }
-
-
-        def format(msg):
-            fields = msg.fields.copy()
-            fields['level'] = severity_names[fields['level']]
-            timestamp = fields.pop('time')
-            timestamp = datetime.datetime.utcfromtimestamp(calendar.timegm(timestamp))
-            timestamp = timestamp.replace(tzinfo=pytz.utc)
-
-            if msg.traceback:
-                fields['exception'] = force_str(msg.traceback)
-
-            for key, value in fields.items():
-                if not isinstance(value, (int, float)) \
-                   and not isinstance(value, six.string_types):
-                    fields[key] = six.text_type(value)
-
-
-            entry = {'@message': msg.text,
-                     '@timestamp': timestamp.isoformat(),
-                     '@source_host': source_host,
-                     '@fields': fields}
-            return anyjson.serialize(entry)
-
-        super(JsonOutput, self).__init__(format=format, close_atexit=True)
-
 
     def _open(self):
         if self.filename:
@@ -68,7 +65,7 @@ class JsonOutput(outputs.Output):
 
             self.fd = os.open(self.filename, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
 
-    def _close (self):
+    def _close(self):
         if self.filename:
             os.close(self.fd)
 
