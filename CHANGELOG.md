@@ -1,3 +1,10 @@
+0.9.0 (2016-05-26)
+==================
+
+* `JsonOutput` became more configurable and now format can be
+changed by overloading `get_log_entry` method. Thanks to
+the [Alexander Akhmetov](https://github.com/alexander-akhmetov).
+
 0.8.0 (2016-05-25)
 ==================
 
