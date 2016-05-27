@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import os
 import calendar
-import anyjson
+import json
 import datetime
 import six
 import socket
@@ -22,7 +22,7 @@ class JsonOutput(outputs.Output):
         self.filename = filename
 
         def serialize_msg(msg):
-            return anyjson.serialize(self.format(msg, source_host=source_host))
+            return json.dumps(self.format(msg, source_host=source_host), ensure_ascii=False)
 
         super(JsonOutput, self).__init__(format=serialize_msg, close_atexit=True)
 
@@ -49,7 +49,7 @@ class JsonOutput(outputs.Output):
     @staticmethod
     def get_log_entry(msg, timestamp, source_host, fields):
         return {
-            '@message': msg.text,
+            '@message': force_str(msg.text),
             '@timestamp': timestamp.isoformat(),
             '@source_host': source_host,
             '@fields': fields,
@@ -70,4 +70,4 @@ class JsonOutput(outputs.Output):
             os.close(self.fd)
 
     def _write(self, msg):
-        os.write(self.fd, (msg + '\n').encode('utf-8'))
+        os.write(self.fd, force_str(msg + '\n'))

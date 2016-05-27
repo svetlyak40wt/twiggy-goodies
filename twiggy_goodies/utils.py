@@ -4,9 +4,9 @@ from twiggy import levels
 
 
 def force_str(text, encoding='utf-8'):
-    if six.text_type(text):
+    if isinstance(text, six.binary_type):
         return text
-    return text.decode(encoding)
+    return text.encode(encoding)
 
 
 def get_log_level_str(level):
