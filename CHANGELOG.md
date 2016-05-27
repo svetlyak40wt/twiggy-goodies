@@ -1,3 +1,9 @@
+0.10.0 (2016-05-26)
+===================
+
+* Fixed a way how `JsonOutput` serialized json. Now it uses standart `json`
+library instead of `anyjson`, and works with unicode in tracebacks correctly.
+
 0.9.0 (2016-05-26)
 ==================
 
