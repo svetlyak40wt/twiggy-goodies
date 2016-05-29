@@ -9,6 +9,12 @@ def force_str(text, encoding='utf-8'):
     return text.encode(encoding)
 
 
+def force_text(text, encoding='utf-8'):
+    if isinstance(text, six.text_type):
+        return text
+    return text.decode(encoding)
+
+
 def get_log_level_str(level):
     severity_names = {
         levels.CRITICAL: 'CRITICAL',

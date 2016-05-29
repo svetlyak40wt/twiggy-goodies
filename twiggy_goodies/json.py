@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import
 
+import io
 import os
 import calendar
 import json
@@ -10,7 +11,7 @@ import socket
 import pytz
 
 from twiggy import outputs
-from twiggy_goodies.utils import force_str, get_log_level_str
+from twiggy_goodies.utils import force_text, get_log_level_str
 
 
 class JsonOutput(outputs.Output):
@@ -18,7 +19,9 @@ class JsonOutput(outputs.Output):
     """
 
     def __init__(self, filename=None, stream=None, source_host=None):
-        self.fd = stream.fileno()
+        assert stream or filename, 'Stream or filename should be given.'
+
+        self.stream = stream
         self.filename = filename
 
         def serialize_msg(msg):
@@ -37,19 +40,21 @@ class JsonOutput(outputs.Output):
         timestamp = timestamp.replace(tzinfo=pytz.utc)
 
         if msg.traceback:
-            fields['exception'] = force_str(msg.traceback)
+            fields['exception'] = force_text(msg.traceback)
 
         for key, value in fields.items():
-            if not isinstance(value, (int, float)) \
-               and not isinstance(value, six.string_types):
-                fields[key] = six.text_type(value)
+            if not isinstance(value, (int, float)):
+                if isinstance(value, six.string_types):
+                    fields[key] = force_text(value)
+                else:
+                    fields[key] = six.text_type(value)
 
         return self.get_log_entry(msg, timestamp, source_host, fields)
 
     @staticmethod
     def get_log_entry(msg, timestamp, source_host, fields):
         return {
-            '@message': force_str(msg.text),
+            '@message': force_text(msg.text),
             '@timestamp': timestamp.isoformat(),
             '@source_host': source_host,
             '@fields': fields,
@@ -57,17 +62,18 @@ class JsonOutput(outputs.Output):
 
     def _open(self):
         if self.filename:
-            assert self.fd is None, 'You should not use arguments "stream" and "filename" together'
+            assert self.stream is None, 'You should not use arguments "stream" and "filename" together'
 
             dirname = os.path.dirname(self.filename)
             if dirname and not os.path.exists(dirname):
                 os.makedirs(dirname)
 
-            self.fd = os.open(self.filename, os.O_WRONLY | os.O_APPEND | os.O_CREAT)
+            self.stream = io.open(self.filename, 'a')
 
     def _close(self):
         if self.filename:
-            os.close(self.fd)
+            # we only want to close the stream, if opened it ourself
+            self.stream.close()
 
     def _write(self, msg):
-        os.write(self.fd, force_str(msg + '\n'))
+        self.stream.write(force_text(msg + '\n'))
