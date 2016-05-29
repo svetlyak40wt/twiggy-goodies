@@ -1,3 +1,10 @@
+0.11.0 (2016-05-30)
+===================
+
+* Fixed issues with unicode encoding on Python 3 for `JsonOutput`.
+* Now `JsonOutput` opens file using `io.open` instead of `os.open`
+probably this could lead to some backward incompatibility.
+
 0.10.0 (2016-05-26)
 ===================
 
