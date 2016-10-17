@@ -14,6 +14,9 @@ from twiggy import outputs
 from twiggy_goodies.utils import force_text, get_log_level_str
 
 
+NUMERIC_TYPES = (float,) + six.integer_types
+
+
 class JsonOutput(outputs.Output):
     """Output from twiggy to JSON, useful for processing logs with logstash.
     """
@@ -43,7 +46,7 @@ class JsonOutput(outputs.Output):
             fields['exception'] = force_text(msg.traceback)
 
         for key, value in fields.items():
-            if not isinstance(value, (int, float)):
+            if not isinstance(value, NUMERIC_TYPES):
                 if isinstance(value, six.string_types):
                     fields[key] = force_text(value)
                 else:
