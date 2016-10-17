@@ -1,3 +1,8 @@
+0.11.2 (2016-10-17)
+===================
+
+* All output of JsonOutput now encoded in utf-8 to be correctly written to file or terminal in presence of international characters.
+
 0.11.1 (2016-10-17)
 ===================
 
