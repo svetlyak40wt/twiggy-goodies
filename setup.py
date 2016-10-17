@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='twiggy-goodies',
-    version='0.11.0',
+    version='0.11.1',
     description='Handlers and helpers for Twiggy logging library.',
     author='Alexander Artemenko',
     author_email='svetlyak.40wt@gmail.com',
@@ -25,6 +25,8 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
     ],
     keywords='logging'
 )
