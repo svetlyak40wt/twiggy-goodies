@@ -21,7 +21,9 @@ _default_fields = {
 
 
 def test_json_formatter_is_able_to_deal_with_unicode_fields():
-    stream = io.StringIO()
+    # logger usually writes it's output to some file and should
+    # encode data into some binary encoding, for example utf-8
+    stream = io.BytesIO()
     output = JsonOutput(stream=stream)
     message = Message(
         INFO,
@@ -37,11 +39,11 @@ def test_json_formatter_is_able_to_deal_with_unicode_fields():
 
     output.output(message)
     result = stream.getvalue()
-    assert isinstance(result, six.text_type)
+    assert isinstance(result, six.binary_type)
 
 
 def test_json_formatter_is_able_to_deal_with_utf8_fields():
-    stream = io.StringIO()
+    stream = io.BytesIO()
     output = JsonOutput(stream=stream)
     message = Message(
         INFO,
@@ -57,7 +59,7 @@ def test_json_formatter_is_able_to_deal_with_utf8_fields():
 
     output.output(message)
     result = stream.getvalue()
-    assert isinstance(result, six.text_type)
+    assert isinstance(result, six.binary_type)
 
 
 def test_json_formatter_does_not_dump_long_as_string():
@@ -67,7 +69,7 @@ def test_json_formatter_does_not_dump_long_as_string():
         # because there is no separation between integer and long
         # in python 3
 
-        stream = io.StringIO()
+        stream = io.BytesIO()
         output = JsonOutput(stream=stream)
         message = Message(
             INFO,
@@ -83,5 +85,4 @@ def test_json_formatter_does_not_dump_long_as_string():
 
         output.output(message)
         result = stream.getvalue()
-
-        assert '"request_id": 1234' in result
+        assert '"request_id": 1234' in result.decode('utf-8')

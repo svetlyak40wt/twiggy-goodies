@@ -28,7 +28,8 @@ class JsonOutput(outputs.Output):
         self.filename = filename
 
         def serialize_msg(msg):
-            return json.dumps(self.format(msg, source_host=source_host), ensure_ascii=False)
+            data = self.format(msg, source_host=source_host)
+            return json.dumps(data, ensure_ascii=False)
 
         super(JsonOutput, self).__init__(format=serialize_msg, close_atexit=True)
 
@@ -79,4 +80,9 @@ class JsonOutput(outputs.Output):
             self.stream.close()
 
     def _write(self, msg):
-        self.stream.write(force_text(msg + '\n'))
+        # all output should be encoded in utf-8
+        # to be correctly written to file or terminal
+        # in presence of international characters
+        text = force_text(msg + '\n')
+        encoded = text.encode('utf-8')
+        self.stream.write(encoded)
