@@ -43,14 +43,18 @@ class ThreadAwareLogger(object):
     def fields(self, **kwargs):
         new_logger = self.get_top_logger().fields_dict(kwargs)
         self.thread_data.loggers_stack.append(new_logger)
-        yield
-        self.thread_data.loggers_stack.pop()
+        try:
+            yield
+        finally:
+            self.thread_data.loggers_stack.pop()
 
     @contextlib.contextmanager
     def name_and_fields(self, name, **kwargs):
         new_logger = self.get_top_logger().name(name).fields_dict(kwargs)
         self.thread_data.loggers_stack.append(new_logger)
-        yield
-        self.thread_data.loggers_stack.pop()
+        try:
+            yield
+        finally:
+            self.thread_data.loggers_stack.pop()
 
 log = ThreadAwareLogger(_twiggy_log)
