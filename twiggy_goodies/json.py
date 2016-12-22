@@ -17,6 +17,29 @@ from twiggy_goodies.utils import force_text, get_log_level_str
 NUMERIC_TYPES = (float,) + six.integer_types
 
 
+def prepare_fields(fields):
+    """Возвращает новый словарь с данными, подготовленными
+    для сериализации в JSON.
+    """
+    def process_item(value):
+        if not isinstance(value, NUMERIC_TYPES):
+            if isinstance(value, six.string_types):
+                # encode utf-8 to unicode, if necessary
+                return force_text(value)
+            else:
+                if isinstance(value, dict):
+                    return prepare_fields(value)
+                elif isinstance(value, list):
+                    return list(map(process_item, value))
+
+                return six.text_type(value)
+        return value
+
+    return dict((key, process_item(value))
+                for key, value
+                in fields.items())
+
+
 class JsonOutput(outputs.Output):
     """Output from twiggy to JSON, useful for processing logs with logstash.
     """
@@ -46,13 +69,7 @@ class JsonOutput(outputs.Output):
         if msg.traceback:
             fields['exception'] = force_text(msg.traceback)
 
-        for key, value in fields.items():
-            if not isinstance(value, NUMERIC_TYPES):
-                if isinstance(value, six.string_types):
-                    fields[key] = force_text(value)
-                else:
-                    fields[key] = six.text_type(value)
-
+        fields = prepare_fields(fields)
         return self.get_log_entry(msg, timestamp, source_host, fields)
 
     @staticmethod

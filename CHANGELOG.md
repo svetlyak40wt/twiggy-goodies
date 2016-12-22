@@ -1,3 +1,12 @@
+0.12.0 (2016-12-22)
+===================
+
+* Now all dicts and lists, passed as field values,
+  are serialized to JSON as dicts and lists. Previously
+  they were coerced to strings.
+  
+  This closes issue #5.
+
 0.11.3 (2016-10-18)
 ===================
 

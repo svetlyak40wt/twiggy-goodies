@@ -8,7 +8,7 @@ import time
 import six
 import sys
 
-from twiggy_goodies.json import JsonOutput
+from twiggy_goodies.json import JsonOutput, prepare_fields
 from twiggy.message import Message
 from twiggy.levels import INFO
 
@@ -86,3 +86,43 @@ def test_json_formatter_does_not_dump_long_as_string():
         output.output(message)
         result = stream.getvalue()
         assert '"request_id": 1234' in result.decode('utf-8')
+
+
+def test_json_formatter_does_not_dump_dict_and_lists_as_strings():
+    # https://github.com/svetlyak40wt/twiggy-goodies/issues/5
+
+    class Service:
+        pass
+    class User:
+        pass
+
+    fields = {
+        'auth': {
+            'type': 'token',
+            'id': 12345,
+            'service': {
+                'internal': True,
+                'id': 'portal',
+                'tags': ['foo', 'bar', User()],
+                'obj': Service()
+            }
+        }
+    }
+    new_fields = prepare_fields(fields)
+
+    assert isinstance(new_fields['auth'], dict), (
+        'Inner structures shouldn\'t be serialized to strings'
+    )
+    assert isinstance(new_fields['auth']['service'], dict), (
+        'Inner structures shouldn\'t be serialized to strings'
+    )
+
+    assert isinstance(
+        new_fields['auth']['service']['obj'],
+        six.text_type
+    ), 'But nested objects should be coerced to strings'
+
+    assert isinstance(
+        new_fields['auth']['service']['tags'][-1],
+        six.text_type
+    ), 'But nested objects should be coerced to strings'
