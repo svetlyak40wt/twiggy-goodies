@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import absolute_import
+
 
 import io
 import os
@@ -37,7 +37,7 @@ def prepare_fields(fields):
 
     return dict((key, process_item(value))
                 for key, value
-                in fields.items())
+                in list(fields.items()))
 
 
 class JsonOutput(outputs.Output):

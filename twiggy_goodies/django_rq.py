@@ -1,10 +1,11 @@
-from __future__ import absolute_import
+
 
 import uuid
 
 from functools import wraps
 from .threading import log
 from django_rq import job as _job
+import collections
 
 
 def job(func_or_queue, connection=None, *args, **kwargs):
@@ -13,7 +14,7 @@ def job(func_or_queue, connection=None, *args, **kwargs):
     job_name field as well."""
     decorated_func = _job(func_or_queue, connection=connection, *args, **kwargs)
 
-    if callable(func_or_queue):
+    if isinstance(func_or_queue, collections.Callable):
         @wraps(decorated_func)
         def wrapper(*args, **kwargs):
             with log.fields(uuid=uuid.uuid4(),

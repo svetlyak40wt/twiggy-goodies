@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+
 
 import uuid
 
@@ -12,7 +12,7 @@ class LogMixin(object):
 
         fields = dict(args=', '.join(args), uuid=str(uuid.uuid4()))
         fields.update((key, value)
-                      for key, value in options.items()
+                      for key, value in list(options.items())
                       if value is not None)
 
         # For convenience to not make

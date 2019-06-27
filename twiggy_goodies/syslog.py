@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import absolute_import
+
 
 import syslog
 from twiggy import outputs, levels, formats
@@ -26,7 +26,7 @@ class SysLogOutput(outputs.Output):
     }
 
     def __init__(self, ident=('some-project', 'with-suffix')):
-        self.ident = u'/'.join(filter(None, ident))
+        self.ident = '/'.join([_f for _f in ident if _f])
 
 
         def format(msg):
@@ -34,9 +34,9 @@ class SysLogOutput(outputs.Output):
                                                self.LOG_WARNING)
 
             fields = formats.line_conversion.convert(msg.fields)
-            text = fields + u':' + msg.text
+            text = fields + ':' + msg.text
             if msg.traceback:
-                text += u'\n' + force_str(msg.traceback)
+                text += '\n' + force_str(msg.traceback)
 
             text = text.encode('utf-8')
             text = text.encode('string_escape')

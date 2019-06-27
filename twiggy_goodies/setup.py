@@ -1,5 +1,5 @@
 # coding: utf-8
-from __future__ import absolute_import
+
 
 import sys
 import logging
@@ -15,7 +15,7 @@ _default_line_formatter = formats.line_format
 # so it is better to make genericValue a smarter
 
 def smart_str(value):
-    if isinstance(value, unicode):
+    if isinstance(value, str):
         return value.encode('utf-8')
     elif isinstance(value, str):
         return value
